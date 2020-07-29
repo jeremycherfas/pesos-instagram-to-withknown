@@ -1,8 +1,3 @@
-Title:   readme.md
-Author: Jeremy Cherfas  
-Date:   2020-07-29 
-Format: snippet   
-
 This script takes advantage of a service from [Bibliogram](https://bibliogram.art), which offers a view of Instagram public profiles. Some of the instances of Bibliogram also offer an RSS feed of the public profile.
 
 I use the feed to build a Micropub request for WithKnown, thus enabling [PESOS](https://indieweb.org/PESOS) from InstaGram.
