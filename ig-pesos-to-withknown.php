@@ -27,7 +27,7 @@ $known_api_key = $config->known_api_key;
 $pubdate = strtotime(file_get_contents('pubdate.txt'));
 
 // Just in case
-rename('pubdate.txt', 'oldpubdate.txt';
+rename('pubdate.txt', 'oldpubdate.txt');
 
 $knowntoken = base64_encode(hash_hmac('sha256', $action, $known_api_key, true));
 echo $knowntoken;
