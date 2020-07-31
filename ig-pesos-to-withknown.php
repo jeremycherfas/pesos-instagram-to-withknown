@@ -26,11 +26,7 @@ $known_api_key = $config->known_api_key;
 // Stored value of previous item
 $pubdate = strtotime(file_get_contents('pubdate.txt'));
 
-// Just in case
-rename('pubdate.txt', 'oldpubdate.txt');
-
 $knowntoken = base64_encode(hash_hmac('sha256', $action, $known_api_key, true));
-echo $knowntoken;
 
 // Get the contents of the RSS feed
 $newfilecontents = file_get_contents($newfile);
@@ -46,6 +42,19 @@ if ($thepubdate > $pubdate) {
 $newitems[] = $newfilecontent;
 }
 }
+
+// No point doing anything if there is nothing to do
+if (empty($newitems)) {
+exit('No new items');
+}
+
+// Just in case
+copy('pubdate.txt', 'oldpubdate.txt');
+
+// Set the pubDate marker for next time
+file_put_contents('pubdate.txt', $newitems[0]['pubDate']);
+
+$newitems = array_reverse($newitems);
 
 // Extract the data and construct the cURL
 foreach ($newitems as $newitem) {
