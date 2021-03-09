@@ -16,19 +16,20 @@ error_reporting(E_ALL);
 set_time_limit(600);
 
 // Get variables from config
-$config = include 'config.php';
-$newfile = $config->feedUrl;
-$endpoint = $config->endpoint;
-$username = $config->username;
-$action = $config->action;
-$known_api_key = $config->known_api_key;
+// $config = include 'config.php';
+// $newfile = $config->feedUrl;
+// $endpoint = $config->endpoint;
+// $username = $config->username;
+// $action = $config->action;
+// $known_api_key = $config->known_api_key;
 
 // Stored value of previous item
 $pubdate = strtotime(file_get_contents('pubdate.txt'));
 
-$knowntoken = base64_encode(hash_hmac('sha256', $action, $known_api_key, true));
+# $knowntoken = base64_encode(hash_hmac('sha256', $action, $known_api_key, true));
 
-// Get the contents of the RSS feed
+$newfile = 'test-text.xml';
+// Get the contents of the RSS feed from the test file
 $newfilecontents = file_get_contents($newfile);
 
 // Convert feed to array and discard elements not an item
@@ -52,9 +53,10 @@ exit('No new items');
 copy('pubdate.txt', 'oldpubdate.txt');
 
 // Set the pubDate marker for next time
-file_put_contents('pubdate.txt', $newitems[0]['pubDate']);
+# file_put_contents('pubdate.txt', $newitems[0]['pubDate']);
 
 $newitems = array_reverse($newitems);
+
 
 // Extract the data and construct the cURL
 foreach ($newitems as $newitem) {
@@ -63,16 +65,22 @@ $pubdate = $newitem['pubDate'];
 $description = $newitem['description'];
 
 // Now get the data out of $description, pending use of simpleXML
-$caption = substr($description, (strpos($description, '>')+1), ((strpos($description, '</p>'))-(strpos($description, '>')+1)));
+$caption = substr($description, 0, (strpos($description, '<img'))); // everything before the img tag
+$caption = preg_replace('/<br\/>/', '', preg_replace('/<br\/><br\/>/', '</p><p>', $caption)); // replace <br> with <p> where appropriate
+
+var_dump($caption);
+
+// GOOD TO HERE 
+
 
 $endurl = strpos($description, '"', strpos($description,'https'));
 $photourl = substr($description, (strpos($description, 'src="')+5),($endurl-(strpos($description, 'src="')+5)));
 
 //now use these to construct the cURL
 
-doCurl($title, $caption, $photourl, $endpoint, $username, $knowntoken);
+# doCurl($title, $caption, $photourl, $endpoint, $username, $knowntoken);
 }
-
+die;
 // Set the pubDate marker for next time
 file_put_contents('pubdate.txt', $newitems[0]['pubDate']);
 

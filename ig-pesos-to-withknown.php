@@ -63,7 +63,8 @@ $pubdate = $newitem['pubDate'];
 $description = $newitem['description'];
 
 // Now get the data out of $description, pending use of simpleXML
-$caption = substr($description, (strpos($description, '>')+1), ((strpos($description, '</p>'))-(strpos($description, '>')+1)));
+$caption = substr($description, 0, (strpos($description, '<img'))); // everything before the img tag
+$caption = preg_replace('/<br\/>/', '', preg_replace('/<br\/><br\/>/', '</p><p>', $caption)); // replace <br> with <p> where appropriate
 
 $endurl = strpos($description, '"', strpos($description,'https'));
 $photourl = substr($description, (strpos($description, 'src="')+5),($endurl-(strpos($description, 'src="')+5)));
